@@ -1,7 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import MusicBlock from "./components/MusicBlock";
-import initialBlockState from "./blockIndex";
 
 function App() {
   //for checking that program loops properly
@@ -11,7 +10,7 @@ function App() {
   //state for setting automata rule
   const [currentRule, setCurrentRule] = useState(30);
   //state for entire grid
-  const [gridState, setGridState] = useState(initialBlockState);
+  const [gridState, setGridState] = useState([[false]]);
   //state for currently selected column on grid
   const [currentSelected, setCurrentSelected] = useState([
     true,
@@ -31,10 +30,25 @@ function App() {
     false,
     false,
   ]);
+
   //set inital state of form
   const [formState, setFormState] = useState(0);
 
-  let notes = ["C2", "D2", "E2", "G2", "C3", "D3", "E3", "G3"];
+  useEffect(() => {
+    const initialBlockState: boolean[][] = [];
+
+    for (let i = 0; i < 8; i++) {
+      initialBlockState.push([])
+    }
+    console.log(initialBlockState)
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 16; j++) {
+        initialBlockState[i].push(false);
+      }
+    }
+    console.log(initialBlockState)
+    setGridState(initialBlockState)
+  }, [])
 
   //creates an array of rows
   const rows = gridState.map((index, idx1) => {

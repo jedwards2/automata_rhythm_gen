@@ -1,7 +1,6 @@
 const MusicBlock = () => {
   return (
-    <div>
-      Hi
+    <div className={`music-block`}>
     </div>
   )
 }
