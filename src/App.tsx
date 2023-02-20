@@ -3,10 +3,6 @@ import { useState, useEffect } from "react";
 import MusicBlock from "./components/MusicBlock";
 
 function App() {
-  //for checking that program loops properly
-  const [count, setCount] = useState(0);
-  //state for turning on/off
-  const [running, setRunning] = useState(false);
   //state for setting automata rule
   const [currentRule, setCurrentRule] = useState(30);
   //state for entire grid
@@ -40,13 +36,11 @@ function App() {
     for (let i = 0; i < 8; i++) {
       initialBlockState.push([])
     }
-    console.log(initialBlockState)
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 16; j++) {
         initialBlockState[i].push(false);
       }
     }
-    console.log(initialBlockState)
     setGridState(initialBlockState)
   }, [])
 
@@ -55,6 +49,14 @@ function App() {
     let row = index.map((item, idx2) => {
       return (
         <MusicBlock
+          key={idx1 - idx2}
+          row={idx1}
+          col={idx2}
+          active={item}
+          gridState={gridState}
+          setGridState={setGridState}
+          switchBlock={switchBlock}
+          currentSelected={currentSelected[idx2]}
         />
       );
     });
@@ -65,26 +67,17 @@ function App() {
     );
   });
 
-  //turns clock on and off
-  function switchRunning() {
-
-  }
-  //universal playnote function to be passed into all blocks
-  // function playNote(note, synth, time) {
-  // synth.triggerAttackRelease(note, "8n", time);
-  // }
-
   //switches block between t/f and updates entire grid state
   //scientists may never know why second version doesn't work
   function switchBlock(row: any, column: any, gridState: any, setGridState: any) {
     let newState = [...gridState];
     newState[row][column] = !newState[row][column];
     setGridState(newState);
-    // setGridState((prevState) => {
-    //   let newState = [...prevState];
-    //   newState[row][column] = !newState[row][column];
-    //   return newState;
-    // });
+    setGridState((prevState: any) => {
+      let newState = [...prevState];
+      newState[row][column] = !newState[row][column];
+      return newState;
+    });
   }
 
   //takes in an integer and returns binary form
@@ -216,14 +209,11 @@ function App() {
               min="0"
               max="126"
               value={formState}
-            // onChange={(e) => setFormState(e.target.value)}
+              onChange={(e) => setFormState(Number(e.target.value))}
             ></input>
             <input type="submit" value="Submit"></input>
           </div>
         </form>
-        <button onClick={switchRunning} className="start-stop-button">
-          {running ? "Stop" : "Start"}
-        </button>
       </div>
 
       <div>{rows}</div>
