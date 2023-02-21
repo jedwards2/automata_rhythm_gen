@@ -30,9 +30,8 @@ function App() {
 
   //set inital state of form
   const [formState, setFormState] = useState(0);
-
   let context = useRef(new AudioContext());
-  let audioParam = useRef({ value: 0 });
+  let audioParams = useRef([{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }])
 
   useEffect(() => {
     audioSetup();
@@ -56,7 +55,9 @@ function App() {
     const device = await createDevice({ context: context.current, patcher });
 
     device.node.connect(context.current.destination);
-    audioParam.current = device.parametersById.get("input1");
+    for (let i = 0; i < 8; i++) {
+      audioParams.current[i] = device.parametersById.get(`input${i}`);
+    }
   }
 
   //creates an array of rows
@@ -204,7 +205,7 @@ function App() {
   }
 
   const playNote = () => {
-    audioParam.current.value = Math.random()
+    audioParams.current[0].value = Math.random()
   }
 
   return (
