@@ -5,9 +5,10 @@ import MusicBlock from "./components/MusicBlock";
 
 const App = () => {
   //USE STATES-------------------------------------------------------------------------------------------
+  //count determines currentSelected column
   const [count, setCount] = useState(0);
-
-  const [running, setRunning] = useState(false)
+  //running refers to the count being updated as the audio context and interval run from page load
+  const [running, setRunning] = useState(false);
   //state for setting automata rule
   const [currentRule, setCurrentRule] = useState(30);
   //state for entire grid -- includes dummy info for initialization
@@ -33,10 +34,22 @@ const App = () => {
   ]);
   //set inital state of form
   const [formState, setFormState] = useState(0);
+
   //USE REFS -------------------------------------------------------------------------------------------
   let context = useRef(new AudioContext());
-  let param = useRef({value: 0})
-  let audioParams = useRef([{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }])
+  //param is used for the testing drone
+  let param = useRef({ value: 0 });
+  //params actually used in the rhythm
+  let audioParams = useRef([
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+  ]);
 
   //USE EFFECTS-------------------------------------------------------------------------------------------
   useEffect(() => {
@@ -45,41 +58,40 @@ const App = () => {
     const initialBlockState: boolean[][] = [];
 
     for (let i = 0; i < 8; i++) {
-    initialBlockState.push([])
+      initialBlockState.push([]);
     }
     for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 16; j++) {
-    initialBlockState[i].push(false);
+      for (let j = 0; j < 16; j++) {
+        initialBlockState[i].push(false);
+      }
     }
-    }
-    setGridState(initialBlockState)
-  }, [])
+    setGridState(initialBlockState);
+  }, []);
 
-  console.log(count)
   useEffect(() => {
     const timer = setInterval(() => {
-      if (running){
+      if (running) {
         setCount((prevCount) => prevCount + 1);
+
         setCurrentSelected((prevState) => {
-        let index = count % prevState.length;
-        let nextIndex = (count + 1) % prevState.length;
-        let newState = [...prevState];
+          let index = count % prevState.length;
+          let nextIndex = (count + 1) % prevState.length;
+          let newState = [...prevState];
 
-        newState[index] = !prevState[index];
-        newState[nextIndex] = !prevState[nextIndex];
+          newState[index] = !prevState[index];
+          newState[nextIndex] = !prevState[nextIndex];
 
-        if (index === gridState[0].length - 1) {
-          gridState.forEach((row, idx) => compute_new_row(row, idx));
-        }
+          if (index === gridState[0].length - 1) {
+            gridState.forEach((row, idx) => compute_new_row(row, idx));
+          }
 
-        return newState;
-      });
+          return newState;
+        });
       }
-    }, 1000);
+    }, 250);
     // clearing interval
     return () => clearInterval(timer);
-  })
-
+  });
 
   //ALL OTHER FUNCTIONS --------------------------------------------------------------------------------
 
@@ -91,11 +103,11 @@ const App = () => {
     const device = await createDevice({ context: context.current, patcher });
     device.node.connect(context.current.destination);
 
-    param.current = device.parametersById.get("test")
+    param.current = device.parametersById.get("test");
     for (let i = 0; i < 8; i++) {
       audioParams.current[i] = device.parametersById.get(`drum_${i}`);
     }
-  }
+  };
   //creates an array of rows
   const rows = gridState.map((index, idx1) => {
     let row = index.map((item, idx2) => {
@@ -121,7 +133,12 @@ const App = () => {
   });
 
   //switches block between t/f and updates entire grid state
-  function switchBlock(row: any, column: any, gridState: any, setGridState: any) {
+  function switchBlock(
+    row: any,
+    column: any,
+    gridState: any,
+    setGridState: any
+  ) {
     let newState = [...gridState];
     newState[row][column] = !newState[row][column];
     setGridState(newState);
@@ -226,7 +243,7 @@ const App = () => {
   }
 
   //form submit
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     let newRule = formState;
     if (newRule > 127) {
@@ -238,20 +255,19 @@ const App = () => {
     if (newRule) {
       setCurrentRule(newRule);
     }
-  }
+  };
 
- const onOffSwitch = async () => {
+  const onOffSwitch = async () => {
     if (running) {
       await context.current.suspend().then(() => setRunning(false));
     } else {
       await context.current.resume().then(() => setRunning(true));
     }
-  }
+  };
 
-  const playNote = () => {
-    param.current.value = Math.random()
-  }
-
+  // const playNote = () => {
+  //   param.current.value = Math.random();
+  // };
 
   return (
     <div className="App">
@@ -274,8 +290,10 @@ const App = () => {
             <input type="submit" value="Submit"></input>
           </div>
         </form>
-        <button onClick={() => onOffSwitch()}>{running ? "Stop" : "Start"}</button>
-        <button onClick={() => playNote()}>Play</button>
+        <button className="start-stop-button" onClick={() => onOffSwitch()}>
+          {running ? "Stop" : "Start"} Audio
+        </button>
+        {/* <button onClick={() => playNote()}>Play</button> */}
       </div>
 
       <div>{rows}</div>
@@ -285,6 +303,6 @@ const App = () => {
       </div>
     </div>
   );
-}
+};
 
 export default App;
