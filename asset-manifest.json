@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/jedwards2/automata_rhythm_gen/static/css/main.d8c6db46.css",
+    "main.js": "/jedwards2/automata_rhythm_gen/static/js/main.5c0551f0.js",
+    "index.html": "/jedwards2/automata_rhythm_gen/index.html",
+    "main.d8c6db46.css.map": "/jedwards2/automata_rhythm_gen/static/css/main.d8c6db46.css.map",
+    "main.5c0551f0.js.map": "/jedwards2/automata_rhythm_gen/static/js/main.5c0551f0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d8c6db46.css",
+    "static/js/main.5c0551f0.js"
+  ]
+}
