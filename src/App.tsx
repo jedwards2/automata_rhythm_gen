@@ -1,5 +1,6 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
+import { createDevice } from "@rnbo/js";
 import MusicBlock from "./components/MusicBlock";
 
 function App() {
@@ -30,7 +31,12 @@ function App() {
   //set inital state of form
   const [formState, setFormState] = useState(0);
 
+  let context = useRef(new AudioContext());
+  let audioParam = useRef({ value: 0 });
+
   useEffect(() => {
+    audioSetup();
+
     const initialBlockState: boolean[][] = [];
 
     for (let i = 0; i < 8; i++) {
@@ -43,6 +49,15 @@ function App() {
     }
     setGridState(initialBlockState)
   }, [])
+
+  const audioSetup = async () => {
+    let rawPatcher = await fetch("exports/patch.export.json");
+    let patcher = await rawPatcher.json();
+    const device = await createDevice({ context: context.current, patcher });
+
+    device.node.connect(context.current.destination);
+    audioParam.current = device.parametersById.get("input1");
+  }
 
   //creates an array of rows
   const rows = gridState.map((index, idx1) => {
@@ -73,11 +88,6 @@ function App() {
     let newState = [...gridState];
     newState[row][column] = !newState[row][column];
     setGridState(newState);
-    setGridState((prevState: any) => {
-      let newState = [...prevState];
-      newState[row][column] = !newState[row][column];
-      return newState;
-    });
   }
 
   //takes in an integer and returns binary form
@@ -193,6 +203,10 @@ function App() {
     }
   }
 
+  const playNote = () => {
+    audioParam.current.value = Math.random()
+  }
+
   return (
     <div className="App">
       <header>
@@ -214,6 +228,7 @@ function App() {
             <input type="submit" value="Submit"></input>
           </div>
         </form>
+        <button onClick={() => playNote()}>Hi</button>
       </div>
 
       <div>{rows}</div>
