@@ -2,7 +2,7 @@
   "name": "automata_rhythm_gen",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/jedwards2/automata_rhythm_gen",
+  "homepage": "https://jedwards2.github.io/automata_rhythm_gen/",
   "dependencies": {
     "@rnbo/js": "^1.1.0",
     "@testing-library/jest-dom": "^5.16.5",
