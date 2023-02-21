@@ -31,8 +31,9 @@ function App() {
   //set inital state of form
   const [formState, setFormState] = useState(0);
   let context = useRef(new AudioContext());
-  let audioParams = useRef([{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }])
-
+  // let audioParams = useRef([{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }])
+  let audioParams = useRef({ value: 0 });
+  let testParams = useRef({ value: 0 })
   useEffect(() => {
     audioSetup();
 
@@ -51,15 +52,21 @@ function App() {
 
   const audioSetup = async () => {
     let rawPatcher = await fetch("exports/patch.export.json");
+    let rawTest = await fetch("exports/test.export.json");
     let patcher = await rawPatcher.json();
+    let testPatcher = await rawTest.json();
     const device = await createDevice({ context: context.current, patcher });
+    const testDevice = await createDevice({ context: context.current, patcher: testPatcher });
 
     device.node.connect(context.current.destination);
+    testDevice.node.connect(context.current.destination);
+
+    testParams.current = testDevice.parametersById.get("test_input")
     for (let i = 0; i < 8; i++) {
-      audioParams.current[i] = device.parametersById.get(`input${i}`);
+      // audioParams.current[i] = device.parametersById.get(`input${i + 1}`);
+      audioParams.current = device.parametersById.get("input1");
     }
   }
-
   //creates an array of rows
   const rows = gridState.map((index, idx1) => {
     let row = index.map((item, idx2) => {
@@ -73,6 +80,7 @@ function App() {
           setGridState={setGridState}
           switchBlock={switchBlock}
           currentSelected={currentSelected[idx2]}
+          audioParams={audioParams}
         />
       );
     });
@@ -204,8 +212,9 @@ function App() {
     }
   }
 
+
   const playNote = () => {
-    audioParams.current[0].value = Math.random()
+    testParams.current.value = Math.random()
   }
 
   return (
@@ -229,7 +238,7 @@ function App() {
             <input type="submit" value="Submit"></input>
           </div>
         </form>
-        <button onClick={() => playNote()}>Hi</button>
+        <button onClick={() => playNote()}></button>
       </div>
 
       <div>{rows}</div>
