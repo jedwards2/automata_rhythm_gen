@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 
 const MusicBlock = ({ row, col, active, gridState, setGridState, switchBlock, currentSelected, audioParams }: any) => {
+
   useEffect(() => {
     if (active && currentSelected) {
-      audioParams.current.value = Math.random();
+      audioParams.current[row].value = Math.random();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, currentSelected]);
 
   return (
