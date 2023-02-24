@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 
 const MusicBlock = ({
@@ -19,9 +18,8 @@ const MusicBlock = ({
 
   return (
     <div
-      className={`music-block ${active ? "on" : "off"} ${
-        currentSelected ? "selected" : ""
-      }`}
+      className={`music-block ${active ? "on" : "off"} ${currentSelected ? "selected" : ""
+        }`}
       onClick={() => switchBlock(row, col, gridState, setGridState)}
     ></div>
   );

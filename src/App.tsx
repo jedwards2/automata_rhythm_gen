@@ -96,7 +96,7 @@ const App = () => {
   //ALL OTHER FUNCTIONS --------------------------------------------------------------------------------
 
   const audioSetup = async () => {
-    let rawPatcher = await fetch("exports/main.export.json");
+    let rawPatcher = await fetch("/automata_rhythm_gen/exports/main.export.json");
 
     let patcher = await rawPatcher.json();
 
@@ -108,6 +108,7 @@ const App = () => {
       audioParams.current[i] = device.parametersById.get(`drum_${i}`);
     }
   };
+
   //creates an array of rows
   const rows = gridState.map((index, idx1) => {
     let row = index.map((item, idx2) => {
@@ -138,7 +139,7 @@ const App = () => {
     column: any,
     gridState: any,
     setGridState: any
-  ) {
+  ): void {
     let newState = [...gridState];
     newState[row][column] = !newState[row][column];
     setGridState(newState);
@@ -165,7 +166,7 @@ const App = () => {
   }
 
   // runs over every row of the table and applies the current rule
-  function compute_new_row(row: any, idx: number) {
+  const compute_new_row = (row: any, idx: number) => {
     let a1 = 0;
     let a2 = 0;
     let a3 = 0;
@@ -243,7 +244,7 @@ const App = () => {
   }
 
   //form submit
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     let newRule = formState;
     if (newRule > 127) {
@@ -265,9 +266,9 @@ const App = () => {
     }
   };
 
-  // const playNote = () => {
-  //   param.current.value = Math.random();
-  // };
+  const playNote = (): void => {
+    param.current.value = Math.random();
+  };
 
   return (
     <div className="App">
@@ -293,7 +294,7 @@ const App = () => {
         <button className="start-stop-button" onClick={() => onOffSwitch()}>
           {running ? "Stop" : "Start"} Audio
         </button>
-        {/* <button onClick={() => playNote()}>Play</button> */}
+        <button onClick={() => playNote()}>Play</button>
       </div>
 
       <div>{rows}</div>
