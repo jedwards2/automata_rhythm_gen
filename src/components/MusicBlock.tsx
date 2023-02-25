@@ -14,6 +14,7 @@ const MusicBlock = ({
     if (active && currentSelected) {
       audioParams.current[row].value = Math.random();
     }
+    //eslint-disable-next-line
   }, [active, currentSelected]);
 
   return (
