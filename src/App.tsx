@@ -134,19 +134,19 @@ const App = () => {
   });
 
   //switches block between t/f and updates entire grid state
-  function switchBlock(
+  const switchBlock = (
     row: any,
     column: any,
     gridState: any,
     setGridState: any
-  ): void {
+  ): void => {
     let newState = [...gridState];
     newState[row][column] = !newState[row][column];
     setGridState(newState);
   }
 
   //takes in an integer and returns binary form
-  function int_to_binary(inputted_int: number) {
+  const int_to_binary = (inputted_int: number) => {
     let new_binary_list = [];
     while (inputted_int > 0) {
       new_binary_list.push(inputted_int % 2);
