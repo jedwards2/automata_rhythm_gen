@@ -134,12 +134,12 @@ const App = () => {
   });
 
   //switches block between t/f and updates entire grid state
-  const switchBlock = (
+  function switchBlock(
     row: any,
     column: any,
     gridState: any,
     setGridState: any
-  ): void => {
+  ): void {
     let newState = [...gridState];
     newState[row][column] = !newState[row][column];
     setGridState(newState);
