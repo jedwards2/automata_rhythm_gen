@@ -4,6 +4,9 @@ import { createDevice } from "@rnbo/js";
 import MusicBlock from "./components/MusicBlock";
 
 const App = () => {
+  //gridHeight can be max 8 due to RNBO patch
+  const gridHeight = 8;
+  const gridWidth = 16;
   //USE STATES-------------------------------------------------------------------------------------------
   //count determines currentSelected column
   const [count, setCount] = useState(0);
@@ -54,14 +57,14 @@ const App = () => {
   //USE EFFECTS-------------------------------------------------------------------------------------------
   useEffect(() => {
     audioSetup();
-
+    //fills gridState with default all-false grid
     const initialBlockState: boolean[][] = [];
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < gridHeight; i++) {
       initialBlockState.push([]);
     }
-    for (let i = 0; i < 8; i++) {
-      for (let j = 0; j < 16; j++) {
+    for (let i = 0; i < gridHeight; i++) {
+      for (let j = 0; j < gridWidth; j++) {
         initialBlockState[i].push(false);
       }
     }
@@ -104,7 +107,8 @@ const App = () => {
     device.node.connect(context.current.destination);
 
     param.current = device.parametersById.get("test");
-    for (let i = 0; i < 8; i++) {
+    //watch gridHeight, device only supports 8 channels
+    for (let i = 0; i < gridHeight; i++) {
       audioParams.current[i] = device.parametersById.get(`drum_${i}`);
     }
   };
@@ -234,6 +238,7 @@ const App = () => {
         //runs test determining future and places it in new array
       }
     }
+
     setGridState((prevState) => {
       let newState = [...prevState];
       newState[idx] = new_index;
@@ -266,9 +271,10 @@ const App = () => {
     }
   };
 
-  const playNote = (): void => {
-    param.current.value = Math.random();
-  };
+  //playNote exists for testing audio in development
+  // const playNote = (): void => {
+  // param.current.value = Math.random();
+  // };
 
   return (
     <div className="App">
@@ -294,7 +300,7 @@ const App = () => {
         <button className="start-stop-button" onClick={() => onOffSwitch()}>
           {running ? "Stop" : "Start"} Audio
         </button>
-        <button onClick={() => playNote()}>Play</button>
+        {/* <button onClick={() => playNote()}>Play</button> */}
       </div>
 
       <div>{rows}</div>
