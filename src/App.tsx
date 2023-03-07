@@ -99,10 +99,9 @@ const App = () => {
   //ALL OTHER FUNCTIONS --------------------------------------------------------------------------------
 
   const audioSetup = async () => {
+    //default setup for audio
     let rawPatcher = await fetch("/automata_rhythm_gen/exports/main.export.json");
-
     let patcher = await rawPatcher.json();
-
     const device = await createDevice({ context: context.current, patcher });
     device.node.connect(context.current.destination);
 
