@@ -262,6 +262,7 @@ const App = () => {
     }
   };
 
+  //async so audio context doesn't affect internal clock
   const onOffSwitch = async () => {
     if (running) {
       await context.current.suspend().then(() => setRunning(false));
